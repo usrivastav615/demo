@@ -65,11 +65,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public void onPageSelected(int position) {
                 //actionBar.setSelectedNavigationItem(position);
-                synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
-                    BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
+                if(BookmarkedCardsFragment.bookMarkedCardAdapter != null) {
+                    synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
+                        BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
+                    }
                 }
-                synchronized (LikedCardsFragment.likedCardAdapter) {
-                    LikedCardsFragment.likedCardAdapter.notifyDataSetChanged();
+
+                if(LikedCardsFragment.likedCardAdapter != null) {
+                    synchronized (LikedCardsFragment.likedCardAdapter) {
+                        LikedCardsFragment.likedCardAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 

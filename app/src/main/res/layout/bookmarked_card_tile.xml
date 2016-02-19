@@ -50,26 +50,26 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             />
-        <RadioButton
-            android:id="@+id/radio_mainCard_like"
+
+        <ImageButton
+            android:id="@+id/bookmark_like_button"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:background="@drawable/like_button_selector"
             android:button="@android:color/transparent"
-            android:checked="false"
             android:layout_gravity="right"
-             />
-        <RadioButton
-            android:id="@+id/radio_mainCard_bookmark"
+            />
+        <ImageButton
+            android:id="@+id/bookmark_bookmark_button"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_marginLeft="5dp"
             android:background="@drawable/bookmark_button_selector"
             android:button="@android:color/transparent"
-            android:checked="false"
             android:layout_gravity="right"
             />
+
     </LinearLayout>
 
 </LinearLayout>
-    </android.support.v7.widget.CardView>
+</android.support.v7.widget.CardView>

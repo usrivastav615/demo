@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -82,35 +83,69 @@ public class BookmarkedCardAdapter extends BaseAdapter{
             e.printStackTrace();
         }
 
-//        final RadioButton likedRadioButton = (RadioButton)rowView.findViewById(R.id.radio_mainCard_like);
-//        likedRadioButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ShopObject sh = MainActivity.Shops.get(position);
-//                likedRadioButton.setChecked(!likedRadioButton.isChecked());
-//                sh.setLiked(likedRadioButton.isChecked());
-//                if(likedRadioButton.isChecked())
-//                {
-//                    MainActivity.MyBookMarkedOffers.add(sh);
-//                }
-//                else
-//                {
-//                    MainActivity.MyBookMarkedOffers.remove(sh);
-//                }
-//            }
-//        });
+        final ImageButton likedRadioButton = (ImageButton)rowView.findViewById(R.id.bookmark_like_button);
+        likedRadioButton.setSelected(shops.get(position).isLiked());
+        if(likedRadioButton.isSelected()) {
+            likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_checked));
+            likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        else
+        {
+            likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_unchecked));
+            likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        likedRadioButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShopObject sh = MainActivity.Shops.get(position);
+                likedRadioButton.setSelected(!likedRadioButton.isSelected());
+                sh.setLiked(likedRadioButton.isSelected());
+                if(likedRadioButton.isSelected())
+                {
+                    MainActivity.MyLikedOffers.add(0, sh);
+                    likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_checked));
+                    likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                }
+                else
+                {
+                    likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_unchecked));
+                    likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                }
+            }
+        });
 
-//        holder.tv=(TextView) rowView.findViewById(R.id.textView1);
-//        holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
-//        holder.tv.setText(result[position]);
-//        holder.img.setImageResource(imageId[position]);
-//        rowView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
-//            }
-//        });
+        final ImageButton bookMarkedRadioButton = (ImageButton)rowView.findViewById(R.id.bookmark_bookmark_button);
+        bookMarkedRadioButton.setSelected(shops.get(position).isBookmarked());
+        if(bookMarkedRadioButton.isSelected())
+        {
+            bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_checked));
+            bookMarkedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        else
+        {
+            bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_unchecked));
+            bookMarkedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        bookMarkedRadioButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShopObject sh = MainActivity.Shops.get(position);
+                bookMarkedRadioButton.setSelected(!bookMarkedRadioButton.isSelected());
+                sh.setBookmarked(bookMarkedRadioButton.isSelected());
+                if(bookMarkedRadioButton.isSelected())
+                {
+                    MainActivity.MyBookMarkedOffers.add(sh);
+                    bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_checked));
+                }
+                else
+                {
+                    MainActivity.MyBookMarkedOffers.remove(sh);
+                    bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_unchecked));
+                }
+                notifyDataSetChanged();
+                bookMarkedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            }
+        });
         return rowView;
     }
 
