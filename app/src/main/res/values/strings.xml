@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Demo2</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="shops">
+        <item>Big Bazaar</item>
+        <item>Denim</item>
+        <item>Shoppers Stop</item>
+        <item>Pantaloons</item>
+        <item>Levis</item>
+    </string-array>
+
+    <string-array name="offers">
+        <item>50% off</item>
+        <item>Buy 1 get 1 free</item>
+        <item>50% off</item>
+        <item>50% off</item>
+        <item>20% off</item>
+    </string-array>
+    <string name="title_activity_card_detail">CardDetailActivity</string>
+</resources>

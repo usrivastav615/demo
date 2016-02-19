@@ -1,0 +1,56 @@
+package beacon.demo.com.demo2;
+
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class CardDetailActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_card_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        ImageView shopImage = (ImageView)findViewById(R.id.imageView2);
+        try
+        {
+            // get input stream
+            InputStream ims = getApplicationContext().getAssets().open(MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getImageUrl());
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            shopImage.setImageDrawable(d);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        TextView shopName = (TextView)findViewById(R.id.shopDetail_shopName);
+        shopName.setText(MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getShopName());
+        TextView offerDetail = (TextView)findViewById(R.id.shopDetail_offerDetail);
+        shopName.setText(MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getOffer());
+
+    }
+
+}
+
+

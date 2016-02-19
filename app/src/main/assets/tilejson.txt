@@ -1,0 +1,62 @@
+{
+	"shopdetails": [{
+		"id": "1",
+		"type": "shop",
+		"name": "Big Bazaar",
+		"offer": "50% off",
+		"liked": true,
+		"bookmarked": false,
+		"details": "Offer Details",
+		"imageUrl": "a1.jpg"
+	}, {
+		"id": "2",
+		"type": "shop",
+		"name": "Shoppers Stop",
+		"offer": "Buy 1, Get 1 Free",
+		"liked": true,
+		"bookmarked": false,
+		"details": "Offer Details",
+		"imageUrl": "a2.jpg"
+	},
+				   {
+		"id": "3",
+		"type": "shop",
+		"name": "Denim",
+		"offer": "50% off",
+		"liked": true,
+		"bookmarked": false,
+		"details": "Offer Details",
+		"imageUrl": "a1.jpg"
+	},
+				   {
+		"id": "4",
+		"type": "shop",
+		"name": "levis",
+		"offer": "One plus one",
+		"liked": true,
+		"bookmarked": false,
+		"details": "Offer Details",
+		"imageUrl": "a2.jpg"
+	},
+				   {
+		"id": "5",
+		"type": "shop",
+		"name": "Big Bazaar",
+		"offer": "50% off",
+		"liked": true,
+		"bookmarked": false,
+		"details": "Offer Details",
+		"imageUrl": "a1.jpg"
+	},
+				   {
+		"id": "6",
+		"type": "shop",
+		"name": "Big Bazaar",
+		"offer": "50% off",
+		"liked": true,
+		"bookmarked": false,
+		"details": "Offer Details",
+		"imageUrl": "a1.jpg"
+	}]
+
+}
