@@ -8,17 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ListView;
+
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BookmarkedCardsFragment.OnFragmentInteractionListener} interface
+ * {@link LikedCardsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BookmarkedCardsFragment#newInstance} factory method to
+ * Use the {@link LikedCardsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BookmarkedCardsFragment extends Fragment {
+public class LikedCardsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +33,7 @@ public class BookmarkedCardsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BookmarkedCardsFragment() {
+    public LikedCardsFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +46,8 @@ public class BookmarkedCardsFragment extends Fragment {
      * @return A new instance of fragment AllCardsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BookmarkedCardsFragment newInstance(String param1, String param2) {
-        BookmarkedCardsFragment fragment = new BookmarkedCardsFragment();
+    public static LikedCardsFragment newInstance(String param1, String param2) {
+        LikedCardsFragment fragment = new LikedCardsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,16 +64,16 @@ public class BookmarkedCardsFragment extends Fragment {
         }
     }
 
-    public static BookmarkedCardAdapter bookMarkedCardAdapter = null;
+    public static LikedCardAdapter likedCardAdapter = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_bookmarked_cards, container, false);
-        GridView myOffers = (GridView) v.findViewById(R.id.gridView_myOffers);
-        bookMarkedCardAdapter = new BookmarkedCardAdapter(getActivity(), MainActivity.MyBookMarkedOffers);
-        myOffers.setAdapter(bookMarkedCardAdapter);
+        View v = inflater.inflate(R.layout.fragment_liked_cards, container, false);
+        ListView myLikedOffers = (ListView) v.findViewById(R.id.listView_likeCards);
+        likedCardAdapter = new LikedCardAdapter(getActivity(), MainActivity.MyLikedOffers);
+        myLikedOffers.setAdapter(likedCardAdapter);
         return v;
     }
 

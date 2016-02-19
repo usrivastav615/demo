@@ -68,6 +68,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
                     BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
                 }
+                synchronized (LikedCardsFragment.likedCardAdapter) {
+                    LikedCardsFragment.likedCardAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -130,7 +133,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new AllCardsFragment(), "ALL");
         adapter.addFrag(new BookmarkedCardsFragment(), "BOOKMARKED");
-        adapter.addFrag(new AllCardsFragment(), "LIKED");
+        adapter.addFrag(new LikedCardsFragment(), "LIKED");
         viewPager.setAdapter(adapter);
     }
 
@@ -154,11 +157,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
                 String shopDetails = jo_inside.getString("details");
                 String imageUrl = jo_inside.getString("imageUrl");
+                String detailedOffer = jo_inside.getString("full_detail");
 
                 boolean liked = jo_inside.getBoolean("liked");
                 boolean bookmarked = jo_inside.getBoolean("bookmarked");
 
-                ShopObject shopObject = new ShopObject(id, type, shopName, offer, shopDetails, imageUrl, liked, bookmarked);
+                ShopObject shopObject = new ShopObject(id, type, shopName, offer, shopDetails, imageUrl, detailedOffer, liked, bookmarked);
 
                 Shops.add(shopObject);
                 ShopsCollection.put(id, shopObject);

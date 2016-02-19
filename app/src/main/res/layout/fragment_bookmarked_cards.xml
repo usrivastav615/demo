@@ -4,14 +4,20 @@
     android:gravity="top"
     android:layout_height="match_parent">
 
-    <ListView
+    <GridView
         android:layout_width="match_parent"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="13.0sp"
+        android:numColumns="auto_fit"
+        android:columnWidth="140dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:id="@+id/listView_likeCards"></ListView>
+        android:stretchMode="columnWidth"
+        android:layout_gravity="center_horizontal|top"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:id="@+id/gridView_myOffers"></GridView>
 
 </LinearLayout>

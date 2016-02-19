@@ -11,17 +11,20 @@ public class ShopObject {
     private String offer;
     private String details;
     private String imageUrl;
+
+    private String detailedOffer;
     private boolean liked;
     private boolean bookmarked;
 
     public ShopObject(String shopId, String type, String shopName, String offer, String details,
-                      String imageUrl, boolean liked, boolean bookmarked) {
+                      String imageUrl, String detailedOffer, boolean liked, boolean bookmarked) {
         this.shopId = shopId;
         this.type = type;
         this.shopName = shopName;
         this.offer = offer;
         this.details = details;
         this.imageUrl = imageUrl;
+        this.detailedOffer = detailedOffer;
         this.liked = liked;
         this.bookmarked = bookmarked;
     }
@@ -72,6 +75,14 @@ public class ShopObject {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getDetailedOffer() {
+        return detailedOffer;
+    }
+
+    public void setDetailedOffer(String detailedOffer) {
+        this.detailedOffer = detailedOffer;
     }
 
     public boolean isLiked() {

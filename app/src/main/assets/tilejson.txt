@@ -7,7 +7,8 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg"
+		"imageUrl": "a1.jpg",
+         "full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 	}, {
 		"id": "2",
 		"type": "shop",
@@ -16,7 +17,8 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a2.jpg"
+		"imageUrl": "a2.jpg",
+		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 	},
 				   {
 		"id": "3",
@@ -26,7 +28,8 @@
 		"liked": true,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg"
+		"imageUrl": "a1.jpg",
+		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 	},
 				   {
 		"id": "4",
@@ -36,7 +39,8 @@
 		"liked": true,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a2.jpg"
+		"imageUrl": "a2.jpg",
+		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 	},
 				   {
 		"id": "5",
@@ -46,7 +50,9 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg"
+		"imageUrl": "a1.jpg",
+		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
+
 	},
 				   {
 		"id": "6",
@@ -56,7 +62,9 @@
 		"liked": true,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg"
+		"imageUrl": "a1.jpg",
+		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
+
 	}]
 
 }
