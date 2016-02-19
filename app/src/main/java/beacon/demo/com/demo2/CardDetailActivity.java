@@ -1,7 +1,10 @@
 package beacon.demo.com.demo2;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +29,19 @@ public class CardDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                String fileName = MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getImageUrl();//Name of an image
+                String externalStorageDirectory = Environment.getExternalStorageDirectory().toString();
+                String myDir = externalStorageDirectory + ""; // the file will be in saved_images
+                Uri uri = Uri.parse("file:///" + myDir + "/" + fileName);
+
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getOffer());
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                shareIntent.setType("image/jpeg");
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(shareIntent, "send"));
             }
         });
 

@@ -1,6 +1,8 @@
 package beacon.demo.com.demo2;
 
 import android.app.ActionBar;
+import android.content.res.AssetManager;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,8 +20,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,31 +77,60 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         });
 
         getAllCards();
-//        actionBar = getActionBar();
-//        ActionBar.Tab tab1 = actionBar.newTab();
-//        tab1.setText("All");
-//        tab1.setTabListener(this);
-//
-//        ActionBar.Tab tab2 = actionBar.newTab();
-//        tab2.setText("Bookmarked");
-//        tab2.setTabListener(this);
-//
-//        ActionBar.Tab tab3 = actionBar.newTab();
-//        tab3.setText("Liked");
-//        tab3.setTabListener(this);
-
-//        actionBar.addTab(tab1);
-//        actionBar.addTab(tab2);
-//        actionBar.addTab(tab3);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        copyAssets();
     }
+
+    private void copyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        if (files != null) for (String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = assetManager.open(filename);
+                File outFile = new File(Environment.getExternalStorageDirectory().toString(), filename);
+                out = new FileOutputStream(outFile);
+                copyFile(in, out);
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+            finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+            }
+        }
+    }
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
+    }
+
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new AllCardsFragment(), "ONE");
-        adapter.addFrag(new BookmarkedCardsFragment(), "TWO");
-        adapter.addFrag(new AllCardsFragment(), "THREE");
+        adapter.addFrag(new AllCardsFragment(), "ALL");
+        adapter.addFrag(new BookmarkedCardsFragment(), "BOOKMARKED");
+        adapter.addFrag(new AllCardsFragment(), "LIKED");
         viewPager.setAdapter(adapter);
     }
 
