@@ -1,6 +1,7 @@
 package beacon.demo.com.demo2;
 
 import android.app.ActionBar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +22,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener, OnFragmentInteractionListener {
     public static HashMap<String, ShopObject> ShopsCollection;
@@ -29,6 +32,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public static String CurrentShopId = "1";
     ActionBar actionBar = null;
     ViewPager mainViewPager = null;
+    private Toolbar mActionBarToolbar;
+    private TabLayout tabLayout;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -37,8 +43,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         mainViewPager = (ViewPager) findViewById(R.id.mainActivityViewPager);
-        mainViewPager.setAdapter(new MainActivityAdapter(getSupportFragmentManager()));
+//        mainViewPager.setAdapter(new MainActivityAdapter(getSupportFragmentManager()));
+        setupViewPager(mainViewPager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mainViewPager);
         mainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -47,7 +58,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             @Override
             public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
+                //actionBar.setSelectedNavigationItem(position);
                 synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
                     BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
                 }
@@ -58,27 +69,34 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             }
         });
+
         getAllCards();
-        actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//        actionBar = getActionBar();
+//        ActionBar.Tab tab1 = actionBar.newTab();
+//        tab1.setText("All");
+//        tab1.setTabListener(this);
+//
+//        ActionBar.Tab tab2 = actionBar.newTab();
+//        tab2.setText("Bookmarked");
+//        tab2.setTabListener(this);
+//
+//        ActionBar.Tab tab3 = actionBar.newTab();
+//        tab3.setText("Liked");
+//        tab3.setTabListener(this);
 
-        ActionBar.Tab tab1 = actionBar.newTab();
-        tab1.setText("All");
-        tab1.setTabListener(this);
-
-        ActionBar.Tab tab2 = actionBar.newTab();
-        tab2.setText("Bookmarked");
-        tab2.setTabListener(this);
-
-        ActionBar.Tab tab3 = actionBar.newTab();
-        tab3.setText("Liked");
-        tab3.setTabListener(this);
-
-        actionBar.addTab(tab1);
-        actionBar.addTab(tab2);
-        actionBar.addTab(tab3);
+//        actionBar.addTab(tab1);
+//        actionBar.addTab(tab2);
+//        actionBar.addTab(tab3);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new AllCardsFragment(), "ONE");
+        adapter.addFrag(new BookmarkedCardsFragment(), "TWO");
+        adapter.addFrag(new AllCardsFragment(), "THREE");
+        viewPager.setAdapter(adapter);
     }
 
     public void getAllCards() {
@@ -219,6 +237,35 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         public int getCount() {
             return 3;
+        }
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
 }
