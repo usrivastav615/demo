@@ -32,10 +32,10 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_below="@id/abc2"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
         android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
+        android:dividerHeight="13.0sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/listView1"></ListView>

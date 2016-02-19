@@ -47,7 +47,7 @@ public class CardDetailActivity extends AppCompatActivity {
         TextView shopName = (TextView)findViewById(R.id.shopDetail_shopName);
         shopName.setText(MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getShopName());
         TextView offerDetail = (TextView)findViewById(R.id.shopDetail_offerDetail);
-        shopName.setText(MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getOffer());
+        offerDetail.setText(MainActivity.ShopsCollection.get(MainActivity.CurrentShopId).getOffer());
 
     }
 
