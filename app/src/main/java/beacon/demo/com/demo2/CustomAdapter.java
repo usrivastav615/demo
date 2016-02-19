@@ -3,6 +3,7 @@ package beacon.demo.com.demo2;
 /**
  * Created by utsrivas on 2/17/2016.
  */
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +27,7 @@ public class CustomAdapter extends BaseAdapter{
     ArrayList<ShopObject> shops = new ArrayList<ShopObject>();
     Context context;
     private static LayoutInflater inflater=null;
-    public CustomAdapter(MainActivity mainActivity, ArrayList<ShopObject> shopObjects) {
+    public CustomAdapter(Activity mainActivity, ArrayList<ShopObject> shopObjects) {
         // TODO Auto-generated constructor stub
         shops = shopObjects;
         context = mainActivity;
@@ -63,8 +66,8 @@ public class CustomAdapter extends BaseAdapter{
                 context.startActivity(intent);
             }
         });
-        TextView t1 = (TextView)rowView.findViewById(R.id.textView1);
-        TextView t2 = (TextView)rowView.findViewById(R.id.textView2);
+        TextView t1 = (TextView)rowView.findViewById(R.id.mainCard_shopName);
+        TextView t2 = (TextView)rowView.findViewById(R.id.mainCard_Offer);
         t1.setText(shops.get(position).getShopName());
         t2.setText(shops.get(position).getOffer());
         ImageView i1 = (ImageView)rowView.findViewById(R.id.imageView);
@@ -81,17 +84,69 @@ public class CustomAdapter extends BaseAdapter{
             e.printStackTrace();
         }
 
-//        holder.tv=(TextView) rowView.findViewById(R.id.textView1);
-//        holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
-//        holder.tv.setText(result[position]);
-//        holder.img.setImageResource(imageId[position]);
-//        rowView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
-//            }
-//        });
+        final ImageButton likedRadioButton = (ImageButton)rowView.findViewById(R.id.mainCard_like_button);
+        likedRadioButton.setSelected(shops.get(position).isLiked());
+        if(likedRadioButton.isSelected()) {
+            likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_checked));
+            likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        else
+        {
+            likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_unchecked));
+            likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        likedRadioButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShopObject sh = MainActivity.Shops.get(position);
+                likedRadioButton.setSelected(!likedRadioButton.isSelected());
+                sh.setLiked(likedRadioButton.isSelected());
+                if(likedRadioButton.isSelected())
+                {
+                    MainActivity.MyLikedOffers.add(0, sh);
+                    likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_checked));
+                    likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                }
+                else
+                {
+                    likedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.heart_unchecked));
+                    likedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                }
+            }
+        });
+
+        final ImageButton bookMarkedRadioButton = (ImageButton)rowView.findViewById(R.id.mainCard_bookmark_button);
+        bookMarkedRadioButton.setSelected(shops.get(position).isBookmarked());
+        if(bookMarkedRadioButton.isSelected())
+        {
+            bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_checked));
+            bookMarkedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        else
+        {
+            bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_unchecked));
+            bookMarkedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
+        bookMarkedRadioButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShopObject sh = MainActivity.Shops.get(position);
+                bookMarkedRadioButton.setSelected(!bookMarkedRadioButton.isSelected());
+                sh.setBookmarked(bookMarkedRadioButton.isSelected());
+                if(bookMarkedRadioButton.isSelected())
+                {
+                    MainActivity.MyBookMarkedOffers.add(sh);
+                    bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_checked));
+                }
+                else
+                {
+                    MainActivity.MyBookMarkedOffers.remove(sh);
+                    bookMarkedRadioButton.setImageDrawable(context.getResources().getDrawable(R.drawable.bookmark_unchecked));
+                }
+                notifyDataSetChanged();
+                bookMarkedRadioButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            }
+        });
         return rowView;
     }
 

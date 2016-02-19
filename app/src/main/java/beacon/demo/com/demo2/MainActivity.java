@@ -1,15 +1,15 @@
 package beacon.demo.com.demo2;
 
+import android.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,32 +21,74 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
-
-    ListView l ;
-    public static HashMap<String,ShopObject> ShopsCollection;
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener, OnFragmentInteractionListener {
+    public static HashMap<String, ShopObject> ShopsCollection;
     public static ArrayList<ShopObject> Shops;
+    public static ArrayList<ShopObject> MyBookMarkedOffers;
+    public static ArrayList<ShopObject> MyLikedOffers;
     public static String CurrentShopId = "1";
-
+    ActionBar actionBar = null;
+    ViewPager mainViewPager = null;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        l = (ListView)findViewById(R.id.listView1);
-        getAllCards();
-        l.setAdapter(new CustomAdapter(this, MainActivity.Shops));
+        mainViewPager = (ViewPager) findViewById(R.id.mainActivityViewPager);
+        mainViewPager.setAdapter(new MainActivityAdapter(getSupportFragmentManager()));
+        mainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+                synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
+                    BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        getAllCards();
+        actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        ActionBar.Tab tab1 = actionBar.newTab();
+        tab1.setText("All");
+        tab1.setTabListener(this);
+
+        ActionBar.Tab tab2 = actionBar.newTab();
+        tab2.setText("Bookmarked");
+        tab2.setTabListener(this);
+
+        ActionBar.Tab tab3 = actionBar.newTab();
+        tab3.setText("Liked");
+        tab3.setTabListener(this);
+
+        actionBar.addTab(tab1);
+        actionBar.addTab(tab2);
+        actionBar.addTab(tab3);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
-    public void getAllCards()
-    {
+    public void getAllCards() {
         try {
             JSONObject obj = new JSONObject(loadJSONFromAsset());
             JSONArray m_jArry = obj.getJSONArray("shopdetails");
             ShopsCollection = new HashMap<String, ShopObject>();
             Shops = new ArrayList<ShopObject>();
+            MyBookMarkedOffers = new ArrayList<ShopObject>();
+            MyLikedOffers = new ArrayList<ShopObject>();
             HashMap<String, String> m_li;
 
             for (int i = 0; i < m_jArry.length(); i++) {
@@ -63,12 +105,19 @@ public class MainActivity extends AppCompatActivity {
                 boolean liked = jo_inside.getBoolean("liked");
                 boolean bookmarked = jo_inside.getBoolean("bookmarked");
 
-                ShopObject shopObject = new ShopObject(id, type, shopName,offer, shopDetails, imageUrl, liked, bookmarked);
+                ShopObject shopObject = new ShopObject(id, type, shopName, offer, shopDetails, imageUrl, liked, bookmarked);
 
                 Shops.add(shopObject);
                 ShopsCollection.put(id, shopObject);
+                if (bookmarked) {
+                    MyBookMarkedOffers.add(shopObject);
+                }
+                if(liked)
+                {
+                    MyLikedOffers.add(0,shopObject);
+                }
             }
-        }  catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -111,5 +160,65 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
+        mainViewPager.setCurrentItem(tab.getPosition());
+        synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
+            BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    class MainActivityAdapter extends FragmentPagerAdapter {
+
+        public MainActivityAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            Fragment fragment = null;
+            if (position == 0) {
+                fragment = new AllCardsFragment();
+            } else if (position == 1) {
+                fragment = new BookmarkedCardsFragment();
+            } else if (position == 2) {
+                fragment = new AllCardsFragment();
+            }
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 }
