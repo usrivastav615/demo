@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,12 +69,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 if(BookmarkedCardsFragment.bookMarkedCardAdapter != null) {
                     synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
                         BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
+                        if(MainActivity.MyBookMarkedOffers.size() > 0)
+                        {
+                            BookmarkedCardsFragment.textView.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            BookmarkedCardsFragment.textView.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
                 if(LikedCardsFragment.likedCardAdapter != null) {
                     synchronized (LikedCardsFragment.likedCardAdapter) {
                         LikedCardsFragment.likedCardAdapter.notifyDataSetChanged();
+                        if(MainActivity.MyLikedOffers.size() > 0)
+                        {
+                            LikedCardsFragment.textView.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            LikedCardsFragment.textView.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:gravity="top"
     android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:id="@+id/noLikedText"
+        android:textColor="#000000"
+        android:textSize="24dp"
+        android:padding="30dp"
+        android:text="Click on heart button on cards to include those offers in Liked."/>
+
 
     <ListView
         android:layout_width="match_parent"
@@ -14,4 +27,4 @@
         android:layout_marginTop="10dp"
         android:id="@+id/listView_likeCards"></ListView>
 
-</LinearLayout>
+</FrameLayout>

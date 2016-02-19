@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -65,6 +66,7 @@ public class LikedCardsFragment extends Fragment {
     }
 
     public static LikedCardAdapter likedCardAdapter = null;
+    public static TextView textView = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,6 +76,7 @@ public class LikedCardsFragment extends Fragment {
         ListView myLikedOffers = (ListView) v.findViewById(R.id.listView_likeCards);
         likedCardAdapter = new LikedCardAdapter(getActivity(), MainActivity.MyLikedOffers);
         myLikedOffers.setAdapter(likedCardAdapter);
+        textView = (TextView)v.findViewById(R.id.noLikedText);
         return v;
     }
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.TextView;
 
 
 /**
@@ -62,6 +63,7 @@ public class BookmarkedCardsFragment extends Fragment {
     }
 
     public static BookmarkedCardAdapter bookMarkedCardAdapter = null;
+    public static TextView textView = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +72,7 @@ public class BookmarkedCardsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_bookmarked_cards, container, false);
         GridView myOffers = (GridView) v.findViewById(R.id.gridView_myOffers);
         bookMarkedCardAdapter = new BookmarkedCardAdapter(getActivity(), MainActivity.MyBookMarkedOffers);
+        textView = (TextView)v.findViewById(R.id.noBookMarkText);
         myOffers.setAdapter(bookMarkedCardAdapter);
         return v;
     }
