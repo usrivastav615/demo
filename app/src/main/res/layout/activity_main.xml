@@ -81,11 +81,10 @@ android:layout_height="match_parent">
         android:layout_width="240dp"
         android:entries="@array/shops"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_red_dark"
+        android:background="@android:color/white"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/holo_blue_dark"
         android:dividerHeight="1dp"
-        android:listSelector="#ffffff" />
+        android:listSelector="#d3d3d3" />
 </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

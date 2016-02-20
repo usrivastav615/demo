@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sign_in_button"/>
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_below="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sing oou"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="@dimen/abc_text_size_small_material" />
+    <TextView
+        android:id="@+id/email"
+        android:layout_below="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sing out"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="@dimen/abc_text_size_small_material" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email"
+        android:text="sing out"
+        android:textColor="@android:color/white"
+         />
+
+    <Button
+        android:id="@+id/disconnect_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sign_out_button"
+        android:text="disonnet"
+        android:textColor="@android:color/white"
+       />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/image"
+        android:layout_below="@+id/disconnect_button"/>
+    <com.google.android.gms.plus.PlusOneButton
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/plusOne"
+        android:layout_below="@+id/image"
+        ></com.google.android.gms.plus.PlusOneButton>
+
+</RelativeLayout>

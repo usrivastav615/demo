@@ -1,0 +1,5 @@
+<root>
+  <item name='com.google.android.gms.common.Scopes PLUS_LOGIN'>
+    <annotation name='java.lang.annotation.Deprecated' />
+  </item>
+</root>

@@ -24,6 +24,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener, OnFragmentInteractionListener {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener, OnFragmentInteractionListener, AdapterView.OnItemClickListener {
     public static HashMap<String, ShopObject> ShopsCollection;
     public static ArrayList<ShopObject> Shops;
     public static ArrayList<ShopObject> MyBookMarkedOffers;
@@ -51,6 +53,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private TabLayout tabLayout;
     private android.support.v4.widget.DrawerLayout mDrawerLayout;
     private BluetoothAdapter bTAdapter;
+    private ListView drawerList;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -133,6 +136,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         registerReceiver(bReciever, filter);
         bTAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        drawerList = (ListView)findViewById(R.id.list_slidermenu);
+        drawerList.setOnItemClickListener(this);
     }
 
     @Override
@@ -328,6 +333,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(position == 0)
+        {
+            Intent intent = new Intent(MainActivity.this, TempActivity.class);
+            startActivity(intent);
+        }
     }
 
     class MainActivityAdapter extends FragmentPagerAdapter {
