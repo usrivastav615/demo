@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
+    <ListView
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:entries="@array/shops"
+        android:id="@+id/navigation_drawer_layout"></ListView>
+
+</android.support.v4.widget.DrawerLayout>

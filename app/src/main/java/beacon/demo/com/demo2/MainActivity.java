@@ -1,6 +1,12 @@
 package beacon.demo.com.demo2;
 
 import android.app.ActionBar;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.support.design.widget.TabLayout;
@@ -11,8 +17,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +49,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     ViewPager mainViewPager = null;
     private Toolbar mActionBarToolbar;
     private TabLayout tabLayout;
+    private android.support.v4.widget.DrawerLayout mDrawerLayout;
+    private BluetoothAdapter bTAdapter;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -51,9 +61,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 
         mainViewPager = (ViewPager) findViewById(R.id.mainActivityViewPager);
-//        mainViewPager.setAdapter(new MainActivityAdapter(getSupportFragmentManager()));
         setupViewPager(mainViewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mainViewPager);
@@ -103,6 +113,50 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         getAllCards();
         copyAssets();
+
+        Toolbar actionbar = (Toolbar) findViewById(R.id.toolbar);
+        if (null != actionbar) {
+            actionbar.setNavigationIcon(R.drawable.icon_navigation);
+
+            actionbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   mDrawerLayout.openDrawer(Gravity.LEFT);
+                }
+            });
+
+            // Inflate a menu to be displayed in the toolbar
+            actionbar.inflateMenu(R.menu.menu_main);
+        }
+
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(bReciever, filter);
+        bTAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bTAdapter.startDiscovery();
+    }
+
+    private final BroadcastReceiver bReciever = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                // Create a new device item
+                //DeviceItem newDevice = new DeviceItem(device.getName(), device.getAddress(), "false");
+                // Add it to our adapter
+            }
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bTAdapter.cancelDiscovery();
     }
 
     private void copyAssets() {
@@ -235,6 +289,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
             return true;
         }
 
