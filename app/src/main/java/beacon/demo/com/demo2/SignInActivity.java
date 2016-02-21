@@ -306,6 +306,7 @@ public class SignInActivity extends Activity implements OnClickListener,
             loginButton.setVisibility(View.GONE);
             btnRevokeAccess.setVisibility(View.GONE);
             llProfileLayout.setVisibility(View.VISIBLE);
+            findViewById(R.id.loggedOutText).setVisibility(View.GONE);
             findViewById(R.id.dummyView).setVisibility(View.VISIBLE);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(m,
                     android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.navigation_draer_logged_in));
@@ -317,6 +318,7 @@ public class SignInActivity extends Activity implements OnClickListener,
             btnSignOut.setVisibility(View.GONE);
             btnRevokeAccess.setVisibility(View.GONE);
             llProfileLayout.setVisibility(View.GONE);
+            findViewById(R.id.loggedOutText).setVisibility(View.VISIBLE);
             findViewById(R.id.dummyView).setVisibility(View.GONE);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(m,
                     android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.navigation_draer_logout));
