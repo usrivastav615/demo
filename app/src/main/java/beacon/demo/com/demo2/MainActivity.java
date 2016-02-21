@@ -344,6 +344,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
         }
+        else if(position == 2)
+        {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        }
     }
 
     class MainActivityAdapter extends FragmentPagerAdapter {
