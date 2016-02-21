@@ -26,11 +26,12 @@
         android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingLeft="110dp"
-        android:paddingRight="110dp"
+        android:layout_gravity="top"
+        android:paddingLeft="115dp"
+        android:paddingRight="115dp"
         app:activeDot="@drawable/active_dot"
         app:dotSize="14dp"
         app:inactiveDot="@drawable/inactive_dot"
         app:jumpingSpeed="670"
-        app:spacing="12dp" />
+        app:spacing="8dp" />
 </LinearLayout>
