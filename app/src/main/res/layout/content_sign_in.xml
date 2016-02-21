@@ -52,11 +52,39 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/dummyView"
+        android:layout_height="2dp"
+        android:visibility="gone"
+        android:background="#d3d3d3"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:id="@+id/noBookMarkText"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:padding="30dp"
+        android:text="To save your offers, login."/>
+
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_sign_in"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="240dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="40dp"
         android:layout_marginBottom="20dp"/>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="240dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        />
 
     <Button
         android:id="@+id/btn_sign_out"

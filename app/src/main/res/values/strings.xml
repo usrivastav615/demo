@@ -2,12 +2,16 @@
     <string name="app_name">Demo2</string>
     <string name="action_settings">Settings</string>
 
-    <string-array name="shops">
-        <item>Big Bazaar</item>
-        <item>Denim</item>
-        <item>Shoppers Stop</item>
-        <item>Pantaloons</item>
-        <item>Levis</item>
+    <string-array name="navigation_draer_logout">
+        <item>Sign In</item>
+        <item>About</item>
+        <item>Settings</item>
+    </string-array>
+
+    <string-array name="navigation_draer_logged_in">
+        <item>My Account</item>
+        <item>About</item>
+        <item>Settings</item>
     </string-array>
 
     <string-array name="offers">
@@ -26,4 +30,6 @@
     <string name="title_activity_temp">TempActivity</string>
     <string name="title_activity_temp2">temp2</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
+
+    <string name="facebook_app_id">525505100964549</string>
 </resources>

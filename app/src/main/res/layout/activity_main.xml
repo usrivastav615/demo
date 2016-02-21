@@ -79,7 +79,7 @@ android:layout_height="match_parent">
     <ListView
         android:id="@+id/list_slidermenu"
         android:layout_width="240dp"
-        android:entries="@array/shops"
+        android:entries="@array/navigation_draer_logout"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:choiceMode="singleChoice"

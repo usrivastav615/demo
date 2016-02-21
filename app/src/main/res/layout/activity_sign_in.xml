@@ -32,7 +32,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_temp" />
+    <include layout="@layout/content_sign_in" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

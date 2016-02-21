@@ -1,74 +1,57 @@
 package beacon.demo.com.demo2;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Arrays;
 
-
-import java.io.InputStream;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
-public class TempActivity extends Activity implements OnClickListener,
-        ConnectionCallbacks, OnConnectionFailedListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class SignInActivity extends Activity implements OnClickListener,
+        ConnectionCallbacks, OnConnectionFailedListener, Toolbar.OnMenuItemClickListener {
 
     private static final int RC_SIGN_IN = 0;
     // Logcat tag
@@ -95,11 +78,15 @@ public class TempActivity extends Activity implements OnClickListener,
     private ImageView imgProfilePic;
     private TextView txtName, txtEmail;
     private LinearLayout llProfileLayout;
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private String loggedInsource = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temp);
+        FacebookSdk.sdkInitialize(this);
+        setContentView(R.layout.activity_sign_in);
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
         btnSignOut = (Button) findViewById(R.id.btn_sign_out);
@@ -126,14 +113,100 @@ public class TempActivity extends Activity implements OnClickListener,
             actionbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TempActivity.this.finish();
+                    SignInActivity.this.finish();
 
                 }
             });
 
             // Inflate a menu to be displayed in the toolbar
-            actionbar.inflateMenu(R.menu.menu_main);
+            actionbar.inflateMenu(R.menu.menu_login);
+            actionbar.setOnMenuItemClickListener(this);
         }
+
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
+
+        if(isLoggedIn())
+        {
+            updateUI(true);
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            Log.v("LoginActivity", response.toString());
+
+                            // Application code
+                            try {
+                                String email = object.getString("email");
+                                String name = object.getString("name");
+                                String userid = object.getString("id");
+                                txtName.setText(name);
+                                txtEmail.setText(email);
+                                loggedInsource = "fb";
+                                updateUI(true);
+
+                                new LoadProfileImage(imgProfilePic).execute("https://graph.facebook.com/" + userid + "/picture?type=large");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email,gender, birthday");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
+
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                // Application code
+                                try {
+                                    String email = object.getString("email");
+                                    String name = object.getString("name");
+                                    String userid = object.getString("id");
+                                    txtName.setText(name);
+                                    txtEmail.setText(email);
+                                    loggedInsource = "fb";
+                                    updateUI(true);
+
+                                new LoadProfileImage(imgProfilePic).execute("https://graph.facebook.com/" + userid + "/picture?type=large");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender, birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
     protected void onStart() {
@@ -199,6 +272,8 @@ public class TempActivity extends Activity implements OnClickListener,
                 mGoogleApiClient.connect();
             }
         }
+
+        callbackManager.onActivityResult(requestCode, responseCode, intent);
     }
 
     @Override
@@ -214,20 +289,39 @@ public class TempActivity extends Activity implements OnClickListener,
 
     }
 
+    private static MainActivity m = null;
+
+    public static void getMainActivityObject(MainActivity m1)
+    {
+        m = m1;
+    }
+
     /**
      * Updating the UI, showing/hiding buttons and profile layout
      * */
     private void updateUI(boolean isSignedIn) {
         if (isSignedIn) {
             btnSignIn.setVisibility(View.GONE);
-            btnSignOut.setVisibility(View.VISIBLE);
-            btnRevokeAccess.setVisibility(View.VISIBLE);
+            btnSignOut.setVisibility(View.GONE);
+            loginButton.setVisibility(View.GONE);
+            btnRevokeAccess.setVisibility(View.GONE);
             llProfileLayout.setVisibility(View.VISIBLE);
+            findViewById(R.id.dummyView).setVisibility(View.VISIBLE);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(m,
+                    android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.navigation_draer_logged_in));
+
+            MainActivity.drawerList.setAdapter(adapter);
         } else {
             btnSignIn.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
             btnSignOut.setVisibility(View.GONE);
             btnRevokeAccess.setVisibility(View.GONE);
             llProfileLayout.setVisibility(View.GONE);
+            findViewById(R.id.dummyView).setVisibility(View.GONE);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(m,
+                    android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.navigation_draer_logout));
+
+            MainActivity.drawerList.setAdapter(adapter);
         }
     }
 
@@ -250,6 +344,7 @@ public class TempActivity extends Activity implements OnClickListener,
 
                 txtName.setText(personName);
                 txtEmail.setText(email);
+                loggedInsource = "g+";
 
                 // by default the profile url gives 50x50 px image only
                 // we can replace the value with whatever dimension we want by
@@ -278,7 +373,7 @@ public class TempActivity extends Activity implements OnClickListener,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
     }
 
@@ -342,6 +437,29 @@ public class TempActivity extends Activity implements OnClickListener,
 
                     });
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            if(loggedInsource == "fb")
+            {
+                LoginManager.getInstance().logOut();
+            }
+            else
+            {
+                signOutFromGplus();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**

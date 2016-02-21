@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -53,7 +54,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private TabLayout tabLayout;
     private android.support.v4.widget.DrawerLayout mDrawerLayout;
     private BluetoothAdapter bTAdapter;
-    private ListView drawerList;
+    public static ListView drawerList;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -66,6 +67,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 
+        SignInActivity.getMainActivityObject(this);
         mainViewPager = (ViewPager) findViewById(R.id.mainActivityViewPager);
         setupViewPager(mainViewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -339,7 +341,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position == 0)
         {
-            Intent intent = new Intent(MainActivity.this, TempActivity.class);
+            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
         }
     }
