@@ -28,7 +28,7 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg",
+		"imageUrl": "a3.jpg",
 		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 	},
 				   {
@@ -39,7 +39,7 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a2.jpg",
+		"imageUrl": "a4.PNG",
 		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 	},
 				   {
@@ -50,7 +50,7 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg",
+		"imageUrl": "a5.jpg",
 		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 
 	},
@@ -62,7 +62,7 @@
 		"liked": false,
 		"bookmarked": false,
 		"details": "Offer Details",
-		"imageUrl": "a1.jpg",
+		"imageUrl": "a6.jpg",
 		"full_detail" : "Hi, People are liking the offer very much. You need to check that.Offers available on\n1) Jeans\n2) Shirts\n3) Pants\n4) Men wear\n5) Women wear"
 
 	}]
