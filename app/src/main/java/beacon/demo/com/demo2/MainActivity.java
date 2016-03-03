@@ -18,10 +18,8 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
@@ -44,7 +42,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -68,12 +65,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener, OnFragmentInteractionListener, AdapterView.OnItemClickListener {
+import beacon.demo.com.demo2.smartbag.AllCartsFragment;
+import beacon.demo.com.demo2.smartbag.GetCarts;
+import beacon.demo.com.demo2.smartbag.sparkFun;
+
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener, OnFragmentInteractionListener, AdapterView.OnItemClickListener, Toolbar.OnMenuItemClickListener {
     public static HashMap<String, ShopObject> ShopsCollection;
     public static ArrayList<ShopObject> Shops;
     public static ArrayList<ShopObject> MyBookMarkedOffers;
     public static ArrayList<ShopObject> MyLikedOffers;
+    public static ArrayList<sparkFun> Carts;
     public static String CurrentShopId = "1";
+    private static boolean fl  = false;
     ActionBar actionBar = null;
     ViewPager mainViewPager = null;
     private Toolbar mActionBarToolbar;
@@ -90,6 +93,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private BluetoothGatt mGatt;
+    private GetCarts mGetCarts;
+    public static int TotalPrice = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +162,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             // Inflate a menu to be displayed in the toolbar
             actionbar.inflateMenu(R.menu.menu_main);
+            actionbar.setOnMenuItemClickListener(this);
         }
 
         mHandler = new Handler();
@@ -176,6 +182,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Shops = new ArrayList<ShopObject>();
         MyBookMarkedOffers = new ArrayList<ShopObject>();
         MyLikedOffers = new ArrayList<ShopObject>();
+        Carts = new ArrayList<sparkFun>();
         new HttpAsyncTask().execute("http://52.87.223.104:8000/polls/");
     }
 
@@ -410,7 +417,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new AllCardsFragment(), "ALL");
         adapter.addFrag(new BookmarkedCardsFragment(), "BOOKMARKED");
-        adapter.addFrag(new LikedCardsFragment(), "LIKED");
+        adapter.addFrag(new AllCartsFragment(), "MY CART");
         viewPager.setAdapter(adapter);
     }
 
@@ -490,7 +497,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            mDrawerLayout.openDrawer(Gravity.LEFT);
+
             return true;
         }
 
@@ -545,30 +552,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
 
-    class MainActivityAdapter extends FragmentPagerAdapter {
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
 
-        public MainActivityAdapter(FragmentManager fm) {
-            super(fm);
+        if(item.getItemId() == R.id.action_settings1) {
+            mGetCarts = new GetCarts(this, "http://52.91.164.220:8080/output/Aq3zOOAY0kSv2V9d4EOpIgyVMVv.json");
+            mGetCarts.startQuery();
         }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            Fragment fragment = null;
-            if (position == 0) {
-                fragment = new AllCardsFragment();
-            } else if (position == 1) {
-                fragment = new BookmarkedCardsFragment();
-            } else if (position == 2) {
-                fragment = new AllCardsFragment();
-            }
-            return fragment;
+        else
+        {
+            Intent intent = new Intent(MainActivity.this, endPage.class);
+            startActivity(intent);
         }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
+        return false;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -658,12 +654,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 {
                     MyLikedOffers.add(0, shopObject);
                 }
+                fl = true;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return result;
     }
+
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException{
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
@@ -681,11 +679,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         protected String doInBackground(String... urls) {
 
+            fl = false;
             return GET(urls[0]);
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+
+            if(!fl)
+            {
+                getAllCards();
+            }
+
             if(AllCardsFragment.allCardsAdapter != null)
             {
                 AllCardsFragment.allCardsAdapter.notifyDataSetChanged();

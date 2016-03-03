@@ -58,6 +58,11 @@
             android:name=".SettingsActivity"
             android:label="Settings"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".endPage"
+            android:label="Settings"
+            android:theme="@style/MyMaterialTheme"></activity>
     </application>
 
 </manifest>
