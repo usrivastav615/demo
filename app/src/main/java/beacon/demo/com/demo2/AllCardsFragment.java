@@ -61,13 +61,16 @@ public class AllCardsFragment extends Fragment {
         }
     }
 
+    public static AllCardsAdapter allCardsAdapter =  null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_all_cards, container, false);
         ListView cardsList = (ListView)v.findViewById(R.id.listView1);
-        cardsList.setAdapter(new CustomAdapter(getActivity(), MainActivity.Shops));
+        allCardsAdapter = new AllCardsAdapter(getActivity(), MainActivity.Shops);
+        cardsList.setAdapter(allCardsAdapter);
         return v;
     }
 

@@ -2,6 +2,9 @@ package beacon.demo.com.demo2;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -21,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -44,14 +48,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -102,29 +112,23 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public void onPageSelected(int position) {
                 //actionBar.setSelectedNavigationItem(position);
-                if(BookmarkedCardsFragment.bookMarkedCardAdapter != null) {
+                if (BookmarkedCardsFragment.bookMarkedCardAdapter != null) {
                     synchronized (BookmarkedCardsFragment.bookMarkedCardAdapter) {
                         BookmarkedCardsFragment.bookMarkedCardAdapter.notifyDataSetChanged();
-                        if(MainActivity.MyBookMarkedOffers.size() > 0)
-                        {
+                        if (MainActivity.MyBookMarkedOffers.size() > 0) {
                             BookmarkedCardsFragment.textView.setVisibility(View.GONE);
-                        }
-                        else
-                        {
+                        } else {
                             BookmarkedCardsFragment.textView.setVisibility(View.VISIBLE);
                         }
                     }
                 }
 
-                if(LikedCardsFragment.likedCardAdapter != null) {
+                if (LikedCardsFragment.likedCardAdapter != null) {
                     synchronized (LikedCardsFragment.likedCardAdapter) {
                         LikedCardsFragment.likedCardAdapter.notifyDataSetChanged();
-                        if(MainActivity.MyLikedOffers.size() > 0)
-                        {
+                        if (MainActivity.MyLikedOffers.size() > 0) {
                             LikedCardsFragment.textView.setVisibility(View.GONE);
-                        }
-                        else
-                        {
+                        } else {
                             LikedCardsFragment.textView.setVisibility(View.VISIBLE);
                         }
                     }
@@ -137,7 +141,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
         });
 
-        getAllCards();
+        //getAllCards();
         copyAssets();
 
         Toolbar actionbar = (Toolbar) findViewById(R.id.toolbar);
@@ -167,6 +171,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         drawerList = (ListView)findViewById(R.id.list_slidermenu);
         drawerList.setOnItemClickListener(this);
+
+        ShopsCollection = new HashMap<String, ShopObject>();
+        Shops = new ArrayList<ShopObject>();
+        MyBookMarkedOffers = new ArrayList<ShopObject>();
+        MyLikedOffers = new ArrayList<ShopObject>();
+        new HttpAsyncTask().execute("http://52.87.223.104:8000/polls/");
     }
 
     @Override
@@ -245,13 +255,38 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
 
+    boolean flag =true;
+
+    private Notification myNotication;
+    private NotificationManager manager;
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             Log.i("callbackType", String.valueOf(callbackType));
             Log.i("result", result.toString());
-            BluetoothDevice btDevice = result.getDevice();
-            connectToDevice(btDevice);
+            if(!flag)
+                return;
+            flag = false;
+            Intent resultIntent = new Intent(MainActivity.this, CardDetailActivity.class);
+            manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 1, resultIntent, 0);
+
+            Notification.Builder builder = new Notification.Builder(MainActivity.this);
+
+            builder.setAutoCancel(false);
+            builder.setTicker("this is ticker text");
+            builder.setContentTitle("Shoppers stop" + " Notification");
+            builder.setContentText("Buy 1, Get 1 Free");
+            builder.setSmallIcon(R.drawable.heart_checked);
+            builder.setContentIntent(pendingIntent);
+            builder.setOngoing(true);
+            builder.setNumber(100);
+            builder.build();
+
+            myNotication = builder.getNotification();
+            myNotication.flags = Notification.FLAG_AUTO_CANCEL | Notification.FLAG_SHOW_LIGHTS;
+            manager.notify(11, myNotication);
+
         }
 
         @Override
@@ -413,7 +448,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 }
                 if(liked)
                 {
-                    MyLikedOffers.add(0,shopObject);
+                    MyLikedOffers.add(0, shopObject);
                 }
             }
         } catch (JSONException e) {
@@ -562,6 +597,99 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+
+
+    public static String GET(String url){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            // receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // convert inputstream to string
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        try {
+            JSONArray shopsJson = new JSONArray(result);
+
+            for(int i = 0; i < shopsJson.length(); i++)
+            {
+                JSONObject obj = shopsJson.getJSONObject(i);
+                JSONObject jo_inside = obj.getJSONObject("fields");
+
+                String id = jo_inside.getString("shop_id");
+                String type = jo_inside.getString("shop_type");
+
+                String shopName = jo_inside.getString("name");
+                String offer = jo_inside.getString("offer");
+
+                String shopDetails = jo_inside.getString("details");
+                String imageUrl = jo_inside.getString("imageUrl");
+                String detailedOffer = jo_inside.getString("full_detail");
+
+                boolean liked = jo_inside.getBoolean("liked");
+                boolean bookmarked = jo_inside.getBoolean("bookmarked");
+
+                ShopObject shopObject = new ShopObject(id, type, shopName, offer, shopDetails, imageUrl, detailedOffer, liked, bookmarked);
+
+                Shops.add(shopObject);
+                ShopsCollection.put(id, shopObject);
+                if (bookmarked) {
+                    MyBookMarkedOffers.add(shopObject);
+                }
+                if(liked)
+                {
+                    MyLikedOffers.add(0, shopObject);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return GET(urls[0]);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            if(AllCardsFragment.allCardsAdapter != null)
+            {
+                AllCardsFragment.allCardsAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

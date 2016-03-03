@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class CustomAdapter extends BaseAdapter{
+public class AllCardsAdapter extends BaseAdapter{
 
     ArrayList<ShopObject> shops = new ArrayList<ShopObject>();
     Context context;
     private static LayoutInflater inflater=null;
-    public CustomAdapter(Activity mainActivity, ArrayList<ShopObject> shopObjects) {
+    public AllCardsAdapter(Activity mainActivity, ArrayList<ShopObject> shopObjects) {
         // TODO Auto-generated constructor stub
         shops = shopObjects;
         context = mainActivity;
